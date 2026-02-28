@@ -1,30 +1,33 @@
-# Guía Detallada: Cómo Crear una Calculadora en Android Studio
+Guía Detallada: Cómo crear una Calculadora en Android Studio
+A continuación, construiremos paso a paso una aplicación de Calculadora utilizando Android Studio, Kotlin y XML. Analizaremos cada línea de código para entender no solo cómo se hace, sino por qué se hace.
 
-A continuación, se presenta una explicación paso a paso y el análisis detallado del código para crear una aplicación de Calculadora utilizando Android Studio, Kotlin y XML.
+Paso 1: Crear un nuevo proyecto
+Abre Android Studio y selecciona New Project (Nuevo Proyecto).
 
----
+Elige Empty Views Activity y haz clic en Next (Siguiente).
 
-## Paso 1: Crear un nuevo proyecto
+Nota: "Empty Views Activity" crea un proyecto base con un diseño clásico basado en vistas (Views y XML). Es la forma fundamental y más utilizada históricamente para aprender la estructura de Android.
 
-1. Abre **Android Studio** y selecciona **New Project** (Nuevo Proyecto).
-2. Elige **Empty Views Activity** y haz clic en **Next**.
-   > *Nota: "Empty Views Activity" crea un proyecto base con un diseño clásico basado en vistas (Views y XML), que es ideal para aprender la estructura tradicional de Android.*
-3. Completa los datos:
-   - **Name**: Calculadora
-   - **Package name**: (Déjalo como viene por defecto)
-   - **Language**: Kotlin
-   - **Minimum SDK**: API 24 (o la que te recomiende por defecto, determina qué dispositivos podrán instalar tu app).
-4. Haz clic en **Finish** y espera a que Android Studio cargue y construya el proyecto inicial.
+Completa los datos de tu aplicación:
 
----
+Name (Nombre): Calculadora
 
-## Paso 2: Diseñar la Interfaz (XML)
+Package name (Nombre del paquete): (Déjalo como viene por defecto, ej. com.tuusuario.calculadora)
 
-Vamos a crear una pantalla con un texto arriba para mostrar los números y una cuadrícula de botones abajo.
+Language (Idioma): Kotlin
 
-Ve al archivo `res/layout/activity_main.xml`. Cambia a la vista de "Code" (Código) o "Split" y reemplaza todo el contenido por esto:
+Minimum SDK (SDK mínimo): API 24 (Esto determina qué dispositivos antiguos podrán instalar tu aplicación; API 24 cubre casi la totalidad de los teléfonos actuales).
 
-```xml
+Haz clic en Finish (Finalizar) y espera unos segundos a que Android Studio cargue y construya la estructura inicial de tu proyecto.
+
+Paso 2: Diseñar la Interfaz Visual (XML)
+Vamos a crear la "cara" de nuestra calculadora: una pantalla superior para mostrar los números y una cuadrícula inferior para los botones.
+
+En el menú lateral izquierdo, ve a la ruta res/layout/activity_main.xml.
+
+Cambia a la vista de Code (Código) o Split (Dividida) en la esquina superior derecha.
+
+Reemplaza todo el contenido existente por el siguiente código:
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -72,29 +75,38 @@ Ve al archivo `res/layout/activity_main.xml`. Cambia a la vista de "Code" (Códi
 
     </GridLayout>
 </LinearLayout>
-```
 
-### 🧠 Explicación del Diseño (XML)
-* **`LinearLayout` (Contenedor Principal):** Organiza sus elementos hijos (el display y la cuadrícula de botones) en una sola dirección. Al usar `android:orientation="vertical"`, los elementos se apilan uno debajo del otro.
-* **`TextView` (Pantalla de la calculadora):**
-  * `android:id="@+id/tvDisplay"`: Le da un identificador único para poder referenciar y modificar su texto desde el código Kotlin.
-  * `android:layout_weight="1"` y `android:layout_height="0dp"`: Hace que el texto ocupe todo el espacio vertical sobrante (empujando los botones hacia abajo).
-  * `android:gravity="end|bottom"`: Alinea el texto en la parte inferior derecha, como en las calculadoras reales.
-* **`GridLayout` (Cuadrícula de botones):**
-  * `android:columnCount="4"` y `android:rowCount="4"`: Crea una cuadrícula perfecta de 4 columnas y 4 filas para distribuir los botones numéricos y de operaciones.
-* **`Button` (Botones individuales):**
-  * Cada botón tiene un `id` único (ej. `@+id/btn7`, `@+id/btnAdd`).
-  * `android:layout_columnWeight="1"` y `android:layout_width="0dp"`: Asegura que cada botón dentro del `GridLayout` ocupe exactamente la misma proporción de ancho en su columna, haciendo que la cuadrícula se vea simétrica.
 
----
+Análisis del Diseño (XML)
+LinearLayout (Contenedor Principal): Organiza sus elementos internos (la pantalla y los botones) en una sola dirección. Al usar android:orientation="vertical", los elementos se apilan ordenadamente uno debajo del otro.
 
-## Paso 3: Programar la Lógica (Kotlin)
+TextView (La pantalla de la calculadora):
 
-Ahora le daremos vida a los botones. Ve a tu archivo `MainActivity.kt` (está en `java/com.tuusuario.calculadora`).
+android:id="@+id/tvDisplay": Le otorga un "nombre" único para que podamos modificar su texto desde el código Kotlin.
 
-Reemplaza el código con lo siguiente (asegúrate de mantener tu declaración `package` en la primera línea):
+android:layout_weight="1" y android:layout_height="0dp": Esta combinación hace que la pantalla se expanda para ocupar todo el espacio vertical sobrante, empujando los botones hacia el fondo.
 
-```kotlin
+android:gravity="end|bottom": Alinea los números en la parte inferior derecha, imitando una calculadora física.
+
+GridLayout (La cuadrícula de botones):
+
+android:columnCount="4" y android:rowCount="4": Crea una matriz perfecta de 4x4 para organizar las teclas.
+
+Button (Los botones):
+
+Cada botón tiene un id único (ej. @+id/btn7).
+
+android:layout_columnWeight="1" y android:layout_width="0dp": Garantiza que cada botón ocupe exactamente el mismo ancho dentro de su columna, manteniendo la simetría visual.
+
+Paso 3: Programar la Lógica (Kotlin)
+Ahora le daremos inteligencia a los botones para que realicen cálculos matemáticos reales.
+
+Ve al archivo MainActivity.kt (ubicado en java/com.tuusuario.calculadora/).
+
+Reemplaza el código con lo siguiente (Asegúrate de que la primera línea, el package, coincida con el nombre de tu proyecto si es diferente):
+
+package com.tuusuario.calculadora // Asegúrate de que esto coincida con tu paquete
+
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -102,7 +114,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    // Variables para manejar la lógica de la calculadora
+    // Variables globales para manejar el estado de la calculadora
     private lateinit var tvDisplay: TextView
     private var primerNumero: Double = 0.0
     private var operacionActual: String = ""
@@ -110,47 +122,48 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main) // Conecta la lógica con el diseño XML
 
         tvDisplay = findViewById(R.id.tvDisplay)
 
-        // Configurar los botones de números usando una lista y un ciclo
+        // Agrupamos los IDs de los botones numéricos en una lista
         val botonesNumeros = listOf(
             R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
             R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9
         )
 
+        // Usamos un ciclo for para asignarle la misma acción a todos los números
         for (id in botonesNumeros) {
             findViewById<Button>(id).setOnClickListener { boton ->
                 numeroPresionado((boton as Button).text.toString())
             }
         }
 
-        // Configurar botones de operaciones
+        // Configuración de los botones de operaciones
         findViewById<Button>(R.id.btnAdd).setOnClickListener { operacionPresionada("+") }
         findViewById<Button>(R.id.btnSub).setOnClickListener { operacionPresionada("-") }
         findViewById<Button>(R.id.btnMul).setOnClickListener { operacionPresionada("*") }
         findViewById<Button>(R.id.btnDiv).setOnClickListener { operacionPresionada("/") }
 
-        // Botón Igual
+        // Configuración del botón Igual y Limpiar
         findViewById<Button>(R.id.btnEqual).setOnClickListener { calcularResultado() }
-
-        // Botón Limpiar (C)
         findViewById<Button>(R.id.btnClear).setOnClickListener { limpiarCalculadora() }
     }
 
     private fun numeroPresionado(digito: String) {
+        // Si acabamos de elegir una operación o acabamos de encenderla, limpiamos la pantalla
         if (esNuevaOperacion) {
             tvDisplay.text = ""
             esNuevaOperacion = false
         }
-        val textoActual = tvDisplay.text.toString()
-        tvDisplay.text = textoActual + digito
+        // Añadimos el nuevo dígito al texto que ya está en pantalla
+        tvDisplay.text = "${tvDisplay.text}$digito"
     }
 
     private fun operacionPresionada(operador: String) {
         val textoActual = tvDisplay.text.toString()
-        if (textoActual.isNotEmpty()) {
+        // Validamos que haya un número en pantalla y que no sea el mensaje de "Error"
+        if (textoActual.isNotEmpty() && textoActual != "Error") {
             primerNumero = textoActual.toDouble()
             operacionActual = operador
             esNuevaOperacion = true
@@ -159,26 +172,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun calcularResultado() {
         val textoActual = tvDisplay.text.toString()
-        if (textoActual.isNotEmpty() && operacionActual.isNotEmpty()) {
+        
+        // Solo calculamos si tenemos un número en pantalla, una operación pendiente, y no estamos en estado de "Error"
+        if (textoActual.isNotEmpty() && operacionActual.isNotEmpty() && textoActual != "Error") {
             val segundoNumero = textoActual.toDouble()
             var resultado = 0.0
 
+            // Evaluamos qué operación realizar
             when (operacionActual) {
                 "+" -> resultado = primerNumero + segundoNumero
                 "-" -> resultado = primerNumero - segundoNumero
                 "*" -> resultado = primerNumero * segundoNumero
                 "/" -> {
+                    // Prevenir la división por cero (que causaría un colapso en la app)
                     if (segundoNumero != 0.0) {
                         resultado = primerNumero / segundoNumero
                     } else {
                         tvDisplay.text = "Error"
                         esNuevaOperacion = true
-                        return
+                        return // Salimos de la función inmediatamente
                     }
                 }
             }
 
-            // Mostrar resultado sin decimales si es un número entero
+            // Mostrar resultado: quitamos los decimales (.0) si el número es un entero exacto
             if (resultado % 1.0 == 0.0) {
                 tvDisplay.text = resultado.toInt().toString()
             } else {
@@ -197,43 +214,39 @@ class MainActivity : AppCompatActivity() {
         esNuevaOperacion = true
     }
 }
-```
 
-### 🧠 Explicación del Código (Kotlin)
+Análisis del Código (Kotlin)
+Variables de la clase:
 
-* **Variables de la Clase:**
-  * `tvDisplay`: Guarda la referencia a la pantalla (`TextView`) de la calculadora para poder modificar los números visibles. Se inicializa más tarde gracias a `lateinit`.
-  * `primerNumero`: Almacena el número inicial insertado *antes* de elegir una operación (+, -, *, /).
-  * `operacionActual`: Guarda en texto qué operación (`+`, `-`, etc.) fue seleccionada.
-  * `esNuevaOperacion`: Un interruptor lógico (`Boolean`). Si cambia a `true`, indica que el próximo número que presiones debe sobreescribir la pantalla (pasa cuando cambias de dígito tras pulsar una operación).
+tvDisplay: Guarda la referencia de la pantalla (TextView). Usamos lateinit porque la inicializaremos un poco más adelante en el código, no al instante.
 
-* **Método `onCreate()`:**
-  * Es el equivalente al punto de partida principal que se ejecuta al abrir la aplicación.
-  * *`setContentView`*: Conecta tu lógica Kotlin con el diseño visual XML (`R.layout.activity_main`).
-  * *`findViewById`*: Encuentra cada elemento visual a partir del Identificador (`id`) que le diste en el XML.
-  * **Eventos de Clic (`setOnClickListener`)**: En lugar de repetir el código de clic 10 veces (uno por cada número), se iteran los IDs en un ciclo `for` que manda a llamar la función `numeroPresionado()`.
+primerNumero: Almacena en la memoria el primer número ingresado antes de que el usuario elija una operación matemática.
 
-* **Método `numeroPresionado(digito: String)`:**
-  * Almacena o añade dígitos a la pantalla. Si `esNuevaOperacion` es `true`, limpia primero la pantalla de dígitos residuales para empezar a escribir un número completamente nuevo.
+operacionActual: Guarda en texto qué símbolo (+, -, etc.) se presionó.
 
-* **Método `operacionPresionada(operador: String)`:**
-  * Se activa al pulsar `+`, `-`, `*` o `/`. 
-  * Toma el número del `tvDisplay` y lo guarda en `primerNumero` de cara a usarlo después cuando sea hora de resolver el cálculo completo.
+esNuevaOperacion: Un interruptor lógico (Boolean). Si es true, le dice a la app que el próximo número que se presione debe borrar la pantalla y empezar uno nuevo.
 
-* **Método `calcularResultado()`:**
-  * Se dispara al pulsar `=`.
-  * Extrae el `segundoNumero` tecleado de la pantalla.
-  * Recurre a una estructura `when` (una función alternativa elegante a muchos "if/else") para comprobar la `operacionActual`. Efectúa la matemática deseada entre el primero y segundo números.
-  * En una división por `0.0`, reacciona arrojando un texto de `"Error"`, previniendo que la aplicación colapse.
-  * Su último paso extrae los decimales `.0` si el número resultante es un entero exacto (p.ej.: Muestra `5` en lugar de `5.0`).
+Método onCreate(): Es el punto de partida de la aplicación.
 
-* **Método `limpiarCalculadora()`:**
-  * Devuelve todo de vuelta a los valores predeterminados (pantalla en `0` y variables en `0.0`), tal como la tecla `C` en una calculadora física.
+setContentView: Enlaza nuestra lógica en Kotlin con el diseño visual en XML.
 
----
+findViewById: Busca un elemento visual en específico utilizando el id que le asignamos en el paso 2.
 
-## Paso 4: Ejecutar la aplicación
+setOnClickListener: Le dice a la aplicación "quédate escuchando, y cuando hagan clic en este botón, ejecuta este código". Para los números, usamos un ciclo for para no repetir la misma instrucción 10 veces.
 
-1. En la parte superior de Android Studio, selecciona tu dispositivo, como un **emulador virtual** (Pixel, Nexus, etc.) o conecta un celular físico si tienes la *Depuración por USB* activada.
-2. Haz clic sobre el botón circular verde de **Play** ("Run 'app'").
-3. Android Studio compilará los archivos transformando el Kotlin y el XML en una APK y abrirá automáticamente tu nueva **Calculadora**. ¡Es momento de probar que toda la lógica funciona tal y como la programaste!
+Método numeroPresionado(): Recibe el dígito pulsado y lo concatena (lo une) al texto que ya existe en la pantalla.
+
+Método operacionPresionada(): Guarda el número actual de la pantalla en la variable primerNumero y prepara la calculadora para recibir el siguiente número.
+
+Método calcularResultado(): * Usa una estructura when (más limpia y eficiente que usar múltiples if/else) para realizar la operación correspondiente.
+
+Seguridad: Incluye una validación para evitar que el programa se cierre inesperadamente si un usuario intenta dividir entre 0.0, arrojando un amigable mensaje de "Error".
+
+Método limpiarCalculadora(): Reinicia todas las variables a su estado original, igual que el botón C en el mundo real.
+
+Paso 4: Ejecutar la aplicación
+En la barra superior de Android Studio, selecciona un emulador virtual (ej. Pixel) o conecta tu celular físico (recuerda tener la Depuración por USB activada en tu teléfono).
+
+Haz clic sobre el botón verde de Play (Run 'app').
+
+Android Studio compilará los archivos, construirá el APK y abrirá automáticamente tu nueva calculadora en el dispositivo. ¡Es momento de probar que toda la lógica matemática funciona tal y como la programaste!
