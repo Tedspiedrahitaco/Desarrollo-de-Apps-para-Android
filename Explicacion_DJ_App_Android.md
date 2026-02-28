@@ -1,41 +1,41 @@
-# Guía Detallada: Cómo Crear una DJ App en Android Studio
+Guía Detallada: Cómo crear una aplicación de DJ en Android Studio
+En este proyecto daremos un salto emocionante: construiremos nuestra propia "DJ App". Aprenderemos a reproducir pistas de audio, controlar el volumen global con una barra deslizante, y lo más importante: descubriremos cómo hacer que la aplicación "recuerde" nuestras configuraciones incluso después de cerrarla.
 
-A continuación, se presenta una explicación paso a paso y el análisis detallado del código para resolver el "Reto de Clase: El DJ App" utilizando Android Studio, Kotlin y XML.
+A continuación, se presenta la explicación paso a paso y el análisis detallado del código.
 
----
+Paso 1: Crear un nuevo proyecto
+Abre Android Studio y selecciona New Project (Nuevo Proyecto).
 
-## Paso 1: Crear un nuevo proyecto
+Elige Empty Views Activity y haz clic en Next (Siguiente).
 
-1. Abre **Android Studio** y selecciona **New Project** (Nuevo Proyecto).
-2. Elige **Empty Views Activity** y haz clic en **Next**.
-3. Completa los datos:
-   - **Name**: DJApp
-   - **Package name**: (Déjalo como viene por defecto)
-   - **Language**: Kotlin
-   - **Minimum SDK**: API 24.
-4. Haz clic en **Finish** y espera a que el proyecto cargue.
+Completa los datos:
 
----
+Name: DJApp
 
-## Paso 2: Preparar Recursos (Audios)
+Package name: (Déjalo por defecto)
 
-Para reproducir sonidos, necesitas guardarlos en una carpeta específica dentro de los recursos del proyecto.
+Language: Kotlin
 
-1. En el panel de la izquierda (Project), ve a `app -> res`.
-2. Haz clic derecho sobre la carpeta `res`, selecciona **New -> Android Resource Directory**.
-3. En la ventana que aparece, cambia el **Resource type** a `raw` y haz clic en **OK**. Se creará una carpeta llamada `raw`.
-4. Arrastra y suelta de 4 a 8 archivos de audio (`.mp3` o `.wav`) dentro de la nueva carpeta `res/raw`. 
-   *Nota: Los nombres de los archivos deben ir en minúsculas y sin espacios (ej. `beat_1.mp3`, `sample_vocal.wav`, `fx_scratch.mp3`).*
+Minimum SDK: API 24
 
----
+Haz clic en Finish (Finalizar) y espera a que el proyecto cargue por completo.
 
-## Paso 3: Diseñar la Interfaz (XML)
+Paso 2: Preparar Recursos (Audios)
+Para reproducir sonidos propios, necesitamos guardarlos en una carpeta especial dentro del proyecto.
 
-Vamos a crear una cuadrícula de botones para nuestros sonidos, controles globales (Stop, Pause), y un deslizador (SeekBar) para el volumen.
+En el panel lateral izquierdo (Project), navega a la ruta app -> res.
 
-Ve al archivo `res/layout/activity_main.xml`. Cambia a la vista de "Code" o "Split" y reemplaza el contenido por esto:
+Haz clic derecho sobre la carpeta res, selecciona New -> Android Resource Directory (Nuevo Directorio de Recursos de Android).
 
-```xml
+En la ventana que aparece, cambia el Resource type (Tipo de recurso) a raw y haz clic en OK. Verás que se ha creado una nueva carpeta llamada raw.
+
+Arrastra y suelta 4 archivos de audio (.mp3 o .wav) dentro de la nueva carpeta res/raw.
+
+⚠️ Regla de Oro de Android: Los nombres de los archivos deben ir estrictamente en minúsculas, sin espacios ni caracteres especiales (ej. sonido1.mp3, beat_base.wav). Renómbralos a sound1, sound2, sound3 y sound4 para seguir este tutorial.
+
+Paso 3: Diseñar la Interfaz Visual (XML)
+Vamos a crear nuestra consola de DJ: una barra de volumen, controles globales (Pausar/Detener) y unos "pads" (botones gigantes) para lanzar los sonidos.
+
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -89,11 +89,9 @@ Ve al archivo `res/layout/activity_main.xml`. Cambia a la vista de "Code" o "Spl
         android:layout_height="0dp"
         android:layout_weight="1"
         android:columnCount="2"
-        android:rowCount="3"
-        android:alignmentMode="alignMargins"
-        android:columnOrderPreserved="false">
+        android:rowCount="2"
+        android:alignmentMode="alignMargins">
 
-        <!-- Agrega de 4 a 6 botones como estos, asegurando layout_columnWeight y layout_rowWeight -->
         <Button
             android:id="@+id/btnSound1"
             android:text="Sonido 1"
@@ -136,21 +134,18 @@ Ve al archivo `res/layout/activity_main.xml`. Cambia a la vista de "Code" o "Spl
 
     </GridLayout>
 </LinearLayout>
-```
 
-### 🧠 Explicación del Diseño (XML)
-* **`LinearLayout` y Fondo Oscuro:** Toda la ventana está de arriba a abajo. Se usó un color `#121212` para darle un aspecto de app profesional / nocturna (modo DJ).
-* **`SeekBar`:** Es una barra deslizante. Se configura de 0 a 100 (`android:max="100"`) para controlar el volumen global y poder guardarlo.
-* **`GridLayout`:** Usamos 2 columnas (`columnCount="2"`) y 3 filas (`rowCount="3"`). El atributo `layout_rowWeight="1"` y `layout_columnWeight="1"` logran que los botones ocupen el espacio equitativamente, viéndose como pads gigantes de música.
+Análisis del Diseño (XML)
+LinearLayout y Fondo Oscuro: Organiza toda la pantalla de arriba hacia abajo. El color #121212 (gris muy oscuro) le da un aspecto de aplicación profesional de música (modo nocturno).
 
----
+SeekBar: Es la barra deslizante. La configuramos de 0 a 100 (android:max="100") para controlar nuestro volumen.
 
-## Paso 4: Programar la Lógica (Kotlin)
+GridLayout: Usamos 2 columnas (columnCount="2") y 2 filas (rowCount="2"). Los atributos layout_rowWeight="1" y layout_columnWeight="1" hacen que los botones se expandan y ocupen el espacio equitativamente, viéndose como verdaderos "pads" de DJ.
 
-Abre el archivo `MainActivity.kt`. Reemplaza su contenido manejando el reproductor dinámico, almacenamiento de preferencias y efectos de color.
+Paso 4: Programar la Lógica (Kotlin)
+Abre el archivo MainActivity.kt. Aquí es donde ocurre la magia: manejaremos múltiples audios a la vez, guardaremos las preferencias del usuario y añadiremos efectos visuales. Reemplaza el código con lo siguiente:
 
-```kotlin
-package com.tuusuario.djapp // Asegúrate de cambiar esto según el paquete de tu app
+package com.tuusuario.djapp // Revisa que este sea tu paquete correcto
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -163,123 +158,135 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    // Mapa para gestionar los MediaPlayers dinámicamente y optimizar memoria
+    // Mapa (Diccionario) para gestionar los MediaPlayers dinámicamente
     private val reproductores = mutableMapOf<Int, MediaPlayer>()
-    private var globalVolume: Float = 0.5f
+    private var volumenGlobal: Float = 0.5f
     
-    // Variables para SharedPreferences (Bonus)
+    // Herramienta para guardar datos en la memoria del teléfono
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. Inicializar SharedPreferences para persistir el volumen
+        // 1. Inicializar SharedPreferences (Nuestra memoria de guardado)
         sharedPreferences = getSharedPreferences("DJAppPrefs", Context.MODE_PRIVATE)
-        val savedVolume = sharedPreferences.getInt("volumen_global", 50)
-        globalVolume = savedVolume / 100f
+        
+        // Recuperar el volumen guardado (si es la primera vez, el valor por defecto será 50)
+        val volumenGuardado = sharedPreferences.getInt("volumen_global", 50)
+        volumenGlobal = volumenGuardado / 100f // Convertir de 0-100 a 0.0-1.0 para Android
 
-        // 2. Configurar el SeekBar de volumen
+        // 2. Configurar el SeekBar (Deslizador de volumen)
         val seekBarVolume = findViewById<SeekBar>(R.id.seekBarVolume)
-        seekBarVolume.progress = savedVolume
+        seekBarVolume.progress = volumenGuardado
+        
         seekBarVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                globalVolume = progress / 100f
-                // Aplicar volumen a todos los reproductores activos
-                reproductores.values.forEach { it.setVolume(globalVolume, globalVolume) }
+                volumenGlobal = progress / 100f
+                // Aplicar el nuevo volumen a todos los sonidos cargados
+                reproductores.values.forEach { it.setVolume(volumenGlobal, volumenGlobal) }
                 
-                // Guardar el nuevo estado del volumen (Persistencia)
+                // Guardar permanentemente este nuevo nivel de volumen
                 sharedPreferences.edit().putInt("volumen_global", progress).apply()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        // 3. Vincular y configurar los botones de sonido
-        // Asegúrate de tener archivos llamados sound1, sound2, sound3, y sound4 en res/raw
+        // 3. Vincular los botones con sus sonidos (asegúrate de que los nombres coincidan en res/raw)
         configurarBoton(R.id.btnSound1, R.raw.sound1, "#3F51B5")
         configurarBoton(R.id.btnSound2, R.raw.sound2, "#009688")
         configurarBoton(R.id.btnSound3, R.raw.sound3, "#9C27B0")
         configurarBoton(R.id.btnSound4, R.raw.sound4, "#673AB7")
 
-        // 4. Configurar controles Globales (Pause y Stop)
+        // 4. Configurar controles Globales
         findViewById<Button>(R.id.btnPauseAll).setOnClickListener {
-            reproductores.values.forEach { 
-                if (it.isPlaying) it.pause() 
+            reproductores.values.forEach { mediaPlayer ->
+                if (mediaPlayer.isPlaying) mediaPlayer.pause() 
             }
         }
 
         findViewById<Button>(R.id.btnStopAll).setOnClickListener {
-            reproductores.values.forEach { 
-                it.stop() 
-                it.prepareAsync() // Prepararlo de nuevo para el siguiente play
+            reproductores.values.forEach { mediaPlayer ->
+                // Pausar y regresar el audio al segundo 0 (equivalente a Stop seguro)
+                if (mediaPlayer.isPlaying) mediaPlayer.pause()
+                mediaPlayer.seekTo(0) 
             }
-            // Restaurar color a todos los botones
+            // Restaurar el color original a todos los botones
             findViewById<Button>(R.id.btnSound1).setBackgroundColor(Color.parseColor("#3F51B5"))
+            findViewById<Button>(R.id.btnSound1).setTextColor(Color.WHITE)
             findViewById<Button>(R.id.btnSound2).setBackgroundColor(Color.parseColor("#009688"))
+            findViewById<Button>(R.id.btnSound2).setTextColor(Color.WHITE)
             findViewById<Button>(R.id.btnSound3).setBackgroundColor(Color.parseColor("#9C27B0"))
+            findViewById<Button>(R.id.btnSound3).setTextColor(Color.WHITE)
             findViewById<Button>(R.id.btnSound4).setBackgroundColor(Color.parseColor("#673AB7"))
+            findViewById<Button>(R.id.btnSound4).setTextColor(Color.WHITE)
         }
     }
 
-    private fun configurarBoton(botonId: Int, audioResId: Int, mainColorHex: String) {
+    private fun configurarBoton(botonId: Int, audioResId: Int, colorOriginalHex: String) {
         val boton = findViewById<Button>(botonId)
         
-        // Crear la instancia de MediaPlayer para este botón y asignarle el volumen actual
+        // Crear el reproductor para este sonido y ajustarle el volumen
         val mediaPlayer = MediaPlayer.create(this, audioResId)
-        mediaPlayer.setVolume(globalVolume, globalVolume)
-        reproductores[botonId] = mediaPlayer
+        mediaPlayer.setVolume(volumenGlobal, volumenGlobal)
+        reproductores[botonId] = mediaPlayer // Lo guardamos en nuestro Mapa
 
-        // Evento cuando termine de sonar: Regresar al color original
+        // Evento: ¿Qué pasa cuando el audio termina de sonar naturalmente?
         mediaPlayer.setOnCompletionListener {
-            boton.setBackgroundColor(Color.parseColor(mainColorHex))
+            boton.setBackgroundColor(Color.parseColor(colorOriginalHex))
             boton.setTextColor(Color.WHITE)
         }
 
+        // Evento: Al presionar el pad
         boton.setOnClickListener {
-            // Si ya está sonando, reiniciarlo desde el principio (superposición tipo DJ)
+            // Efecto DJ: Si tocas el botón mientras ya suena, se reinicia desde cero (Stutter effect)
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.seekTo(0)
             } else {
                 mediaPlayer.start()
             }
             
-            // Efecto de color: Cambiar a un color brillante/blanco temporalmente mientras suena
+            // Efecto Visual: Cambiar a blanco brillante mientras el pad está "activo"
             boton.setBackgroundColor(Color.WHITE)
             boton.setTextColor(Color.BLACK)
         }
     }
 
-    // 5. Mejorar Rendimiento: Liberar memoria cuando la app se cierra
+    // 5. RENDIMIENTO: Liberar memoria cuando la app se cierra
     override fun onDestroy() {
         super.onDestroy()
-        reproductores.values.forEach { 
-            it.release() 
+        reproductores.values.forEach { mediaPlayer ->
+            mediaPlayer.release() // Destruye el reproductor para liberar RAM
         }
         reproductores.clear()
     }
 }
-```
 
-### 🧠 Explicación del Código (Kotlin)
+Análisis del Código (Kotlin)
+mutableMapOf<Int, MediaPlayer>(): Usamos un Mapa (una especie de diccionario) para almacenar todos nuestros audios, vinculando el ID de cada botón con su archivo de sonido. Esto nos permite usar ciclos (forEach) para pausar todos los audios a la vez, ahorrándonos escribir decenas de líneas de código repetitivo.
 
-* **`reproductores = mutableMapOf<Int, MediaPlayer>()`:** 
-  Usa un *Mapa* (Diccionario) para almacenar los recursos de audio, vinculando el ID del botón con su objeto `MediaPlayer`. Esto facilita operaciones masivas como pausar todos los audios simultáneamente sin repetir código y logrando gestionar todo de manera dinámica.
-* **`SharedPreferences`:**
-  Guarda información permanentemente en el celular para que no se borre al cerrar la app. En este caso, lee y escribe el nivel del `SeekBar` (volumen global). Al volver a abrir la app, el SeekBar recordará exactamente qué nivel de volumen dejó el usuario.
-* **`SeekBar.OnSeekBarChangeListener`:**
-  Este evento detecta cuándo el usuario arrastra la barra, traduce ese dato numérico a un porcentaje de `0.0f` a `1.0f` (es el formato que usa Android para volumen de sistema en `MediaPlayer`), se lo aplica dinámicamente a todos los sonidos e invoca a las `SharedPreferences` para guardarlo.
-* **Función `configurarBoton()`:**
-  Encapsula toda la lógica específica para cada botón de la DJ App:
-  * **Efectos de Color:** Al presionar y hacer el `<MediaPlayer>.start()`, cambia a color blanco temporalmente, dándole esa apariencia de "Pad Presionado". Se usa el método `setOnCompletionListener` que escucha cuándo el audio acaba naturalmente para regresar el botón al color original asignado.
-  * **Inicio Rápido (Superposición):** Si tocas el botón mientras ya está sonando, con `seekTo(0)` ordenas que se repita desde el principio para hacer el famoso efecto DJ de repetición.
-* **`onDestroy()`:**
-  ¡Cumpliendo una regla de oro del Android Rendering en pro del rendimiento! El framework llama obligatoriamente a esta función antes de destruir por completo la ventana de la actividad. El código itera toda la base de `reproductores` haciendo un llamado directo a `.release()`, soltando recursos valiosos y liberando memoria RAM que de otro modo quedaría flotante y alentarían el dispositivo.
+SharedPreferences: Piensa en esto como la "Memory Card" de tu aplicación. Guarda información permanentemente en tu teléfono. En este código, la usamos para guardar un número ("volumen_global") cada vez que mueves la barra. Al volver a abrir la app, lee ese archivo y ajusta el volumen justo donde lo dejaste.
 
----
+SeekBar.OnSeekBarChangeListener: Este "escuchador" detecta en tiempo real cuándo arrastras la barra de volumen. Traduce la posición de la barra (0 a 100) a decimales (0.0f a 1.0f), que es el formato matemático que Android exige para ajustar el volumen.
 
-## Paso 5: Ejecutar y Probar
+Función configurarBoton(): Centraliza la lógica para no repetir código.
 
-1. Compila la app presionando el botón Play (Run) verde.
-2. Sube el nivel auditivo del slider, y empieza a presionar cada pad para armar ritmos y beats a tu gusto.
-3. Prueba pausarlos todos, pararlos, o tocar repetidas veces un botón para crear efectos rítmicos. Puedes modificar tus propios audios metiendo lo que quieras en tu carpeta `/raw`. ¡Tu primera DJ App está lista y lograste todas las metas del Bonus!
+Inicio Rápido (Superposición): Gracias a seekTo(0), si tocas el pad repetidamente, el sonido se reinicia desde el milisegundo cero sin detenerse, creando el famoso efecto "Stutter" o tartamudeo de los DJs.
+
+Efectos Visuales: Al presionar, el botón se ilumina de blanco. Usamos setOnCompletionListener para que, cuando la pista termine sola, el botón recupere su color original.
+
+onDestroy(): ¡Esta es una regla de oro profesional! Los archivos de audio consumen mucha memoria RAM. Cuando Android destruye la aplicación al cerrarla, llamamos a .release() en cada sonido para devolverle esa memoria al celular.
+
+Paso 5: Ejecutar y Probar
+Compila la aplicación presionando el botón verde de Play (Run) en la barra superior.
+
+Mueve la barra de volumen hacia arriba y hacia abajo (¡y cierra la app para comprobar que guardó tu preferencia!).
+
+Presiona los pads para lanzar tus sonidos, experimenta pulsándolos rápido y prueba los botones de control global.
+
+¡Felicidades, tu primera DJ App profesional está lista!
+
+Ve al archivo res/layout/activity_main.xml.
+
+Cambia a la vista de Code (Código) o Split (Dividida) y reemplaza todo el contenido por esto:
